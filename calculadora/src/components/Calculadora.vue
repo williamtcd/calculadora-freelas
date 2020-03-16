@@ -114,9 +114,10 @@
                         <v-btn @click="incluir(form)" small color="primary">Salva</v-btn>
                         </v-form>
                         <ul>
-                            <li v-for="despesa in despesas" :key="despesa.id">
+                            <li v-for="(despesa, index) in despesas" :key="index">
                             {{ despesa.nome }}
-                            {{ despesa.valor }}</li>
+                            {{ despesa.valor }}
+                            <v-btn @click="remove(index)" small color="primary">{{despesa.id}}</v-btn></li>
                         </ul>
                       </v-col>
                   </v-row>
@@ -204,8 +205,7 @@ import { mask } from 'vue-the-mask'
         grow: true,
         tabs: 3,
       despesas: [
-        { nome: 'Aluguel', valor: '800' },
-        { nome: 'luz', valor: '15.5' },
+        {nome: 'teste', valor: '800'}
       ]
     }),
     created () {
@@ -246,6 +246,12 @@ import { mask } from 'vue-the-mask'
         this.form.dValor = ''
         this.contador()
         this.calculo()
+      },
+      remove (despesa) {
+        delete this.despesas[{ nome: despesa.dNome }];
+        
+        console.log(despesa)
+        console.log(this.despesas)
       },
       proximo () {
         this.tab = 'tab-2'
