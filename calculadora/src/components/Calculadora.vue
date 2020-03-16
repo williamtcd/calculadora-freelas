@@ -212,7 +212,7 @@ import { mask } from 'vue-the-mask'
       this.contador()
     },
     methods: {
-      calculo: function() {          
+      calculo () {          
           if(this.semanaFerias){
               this.horasAno = this.horasDia*this.diasSemana*(48-this.semanaFerias)
           }else{
@@ -248,10 +248,9 @@ import { mask } from 'vue-the-mask'
         this.calculo()
       },
       remove (despesa) {
-        delete this.despesas[{ nome: despesa.dNome }];
-        
-        console.log(despesa)
-        console.log(this.despesas)
+        this.despesas.splice(despesa, 1)
+        this.contador()
+        this.calculo()
       },
       proximo () {
         this.tab = 'tab-2'
