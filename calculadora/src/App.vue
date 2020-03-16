@@ -31,19 +31,19 @@
     </v-app-bar>
 
     <v-content>
-      <HelloWorld/>
+      <Calculadora/>
     </v-content>
   </v-app>
 </template>
 
 <script>
-import HelloWorld from './components/HelloWorld';
+import Calculadora from './components/Calculadora';
 
 export default {
   name: 'App',
 
   components: {
-    HelloWorld,
+    Calculadora,
   },
 
   data: () => ({
