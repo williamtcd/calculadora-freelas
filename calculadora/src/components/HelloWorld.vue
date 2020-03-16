@@ -9,7 +9,7 @@
               outlined
               dense
               prefix="R$"
-              min="0"
+              :min="0"
               type="number"
             ></v-text-field>
             <v-text-field
@@ -19,7 +19,7 @@
               outlined
               dense
               type="number"
-              min="0"
+              :min="0"
             ></v-text-field>
             <v-text-field
               label="Quer trabalhar quantos dias por semana ?"
@@ -28,7 +28,7 @@
               outlined
               dense
               type="number"
-              min="0"
+              :min="0"
             ></v-text-field>            
             <v-text-field
               label="Quantas semanas de férias por ano ?"
@@ -38,8 +38,8 @@
               outlined
               dense
               type="number"
-              max="47"
-              min="0"
+              :max="47"
+              :min="0"
             ></v-text-field>
             <v-text-field
               label="Total de despesas por mês ?"
@@ -49,7 +49,7 @@
               dense            
               prefix="R$"              
               type="number"
-              min="0"
+              :min="0"
             ></v-text-field>
             <v-text-field
               label="sua hora tecnica é:"
@@ -100,14 +100,14 @@ import { mask } from 'vue-the-mask'
           let calcula = (this.lucroAno/100*110)/this.horasAno
           this.horaTecnica = calcula.toFixed(2)
       },
-      verificaFerias (min) {
+      verificaFerias () {
         if(this.semanaFerias > 47){
           this.semanaFerias = 47
         }
         if(this.semanaFerias < 0 ){
           this.semanaFerias = 0
         }
-        console.log(min)
+        this.calculo()
       },
       calcjobs: function () {
           if(!this.jobHoras){
