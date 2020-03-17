@@ -1,5 +1,5 @@
 <template>
-  <v-container
+  <v-container style="background-color: transparent!important;"
         fluid
           >
           <v-row  align="center"
@@ -7,7 +7,7 @@
         <v-col cols="12"
             sm="12"
             md="8" lg="5" >
-            <div class="white text-center"  style="margin-bottom: -12px; border-top-left-radius: 20px; border-top-right-radius: 20px">
+            <div class="text-center"  style="margin-bottom: -12px; border-top-left-radius: 20px; border-top-right-radius: 20px; background-color: rgba(255, 255, 255, 0.7)">
               <br>
               <h1>Calculadora de Freelas</h1>
               Saiba o quanto cobrar por um freela.
@@ -17,23 +17,26 @@
         </v-col>
           </v-row>
     <v-row  align="center"
-          justify="center" >
+          justify="center">
         <v-col cols="12"
             sm="12"
             md="8" lg="5">
           <v-tabs
             v-model="tab"
-            background-color="indigo accent-4"
             dark
+            background-color="light-blue darken-2"
+            slider-color="green"
             :centered="false"
             :grow="true"
+            center-active
+            show-arrows="true"
             :icons-and-text="false" >
             <v-tab :key="1" :href="`#tab-1`">
                 Pretensões
               </v-tab>
             
             <v-tab :key="2" :href="`#tab-2`">
-                custos
+                Despesas
             </v-tab>
 
             <v-tab :key="3" :href="`#tab-3`">
@@ -46,16 +49,17 @@
 
               <v-tab-item
                       :key="1"
-                      :value="'tab-' + 1"
+                      :value="'tab-' + 1" 
                     >
-                    <v-row align="center"
+                    <v-row align="center" 
                       justify="center" >
-                      <v-col cols="10"> 
+                      <v-col cols="10" class="text-center" > 
+                       <br>
                         Informe suas pretensões
                         <br>
                         <br>
                         <v-text-field
-                          label="Quanto quer ganhar de salário liquido por mês?"
+                          label="Quanto quer de salário livre por mês?"
                           v-model="salarioLiquido"
                           @input="calculo"
                           outlined
@@ -66,7 +70,7 @@
                           type="number"
                         />
                         <v-text-field
-                          label="Quer trabalhar quantas horas por dia ?"
+                          label="Vai trabalhar quantas horas por dia ?"
                           v-model="horasDia"
                           @input="calculo"
                           outlined
@@ -102,7 +106,7 @@
                     </v-row>
                     <v-row>
                       <v-col align="right">
-                      <v-btn @click="tab='tab-2'" small color="primary">Proximo</v-btn>
+                      <v-btn @click="tab='tab-2'" small color="light-blue darken-2" style="margin-right: 10px">Proximo</v-btn>
                       </v-col>
                     </v-row>
               </v-tab-item>
@@ -115,7 +119,10 @@
                     
                   <v-row align="center"
                       justify="center">
-                      <v-col cols="10"> 
+                      <v-col cols="10" align="center">
+                        Total das Despesas R$ {{ this.totalDespesas}}
+                        <br>
+                        <br>
                         <v-form>
                         <v-text-field
                             label="nome"
@@ -131,22 +138,36 @@
                             prefix="R$"
                             type="number"
                           ></v-text-field>
-                          <v-btn @click="incluir(form)" small color="primary">Salva</v-btn>
+                          <v-col align="center">
+                          <v-btn @click="incluir(form)" small color="primary">Incluir </v-btn>
+                          </v-col>
                           </v-form>
-                          <ul>
-                              <li v-for="(despesa, index) in despesas" :key="index">
-                              {{ despesa.nome }}
-                              - R$ {{ despesa.valor }}
-                              <v-btn @click="remove(index)" small color="primary">X</v-btn></li>
-                          </ul>
+                            <v-simple-table fixed-header dense height="150px" style="margin-top: 15px; margin-bottom: 0px">
+                              <template>
+                                <thead>
+                                  <tr>
+                                    <th class="text-left">Name</th>
+                                    <th class="text-left">Calories</th>
+                                    <th class="text-right"></th>
+                                  </tr>
+                                </thead>
+                                <tbody>
+                                  <tr v-for="(despesa, index) in despesas" :key="index">
+                                    <td>{{ despesa.nome }}</td>
+                                    <td>R$ {{ despesa.valor }}</td>
+                                    <td  class="text-right"><v-btn @click="remove(index)" small color="primary">X</v-btn></td>
+                                  </tr>
+                                </tbody>
+                              </template>
+                            </v-simple-table>
                         </v-col>
                     </v-row>
                     <v-row>
                       <v-col align="left">
-                      <v-btn @click="tab='tab-1'" small color="primary">Anterior</v-btn>
+                      <v-btn @click="tab='tab-1'" small color="light-blue darken-2" style="margin-left: 10px">Anterior</v-btn>
                       </v-col>
                       <v-col align="right">
-                      <v-btn @click="tab='tab-3'" small color="primary">Proximo</v-btn>
+                      <v-btn @click="tab='tab-3'" small color="light-blue darken-2" style="margin-right: 10px">Proximo</v-btn>
                       </v-col>
                     </v-row>
               </v-tab-item>
@@ -182,8 +203,9 @@
               <v-tab-item
                       :key="4"
                       :value="'tab-' + 4"
+                      align="center"
                     >
-                  jobs
+                  Numa proxima atualização
 
               
               </v-tab-item>
@@ -197,6 +219,7 @@
 
 <script>
 import { mask } from 'vue-the-mask'
+
   export default {
     directives: {
       mask,
@@ -293,4 +316,5 @@ import { mask } from 'vue-the-mask'
       }       
     }
 }
+
 </script>
