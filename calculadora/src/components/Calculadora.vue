@@ -1,175 +1,196 @@
 <template>
-  <v-container class="fill-height">
-    <v-row class="justify-center">
-      <v-col cols="6" class="Aligned flex item">
-        <v-tabs
-          v-model="tab"
-          background-color="deep-purple accent-4"
-          class="elevation-2"
-          dark
-          :centered="true"
-          :grow="true"
-          :icons-and-text="icons"
-        >
-          <v-tab :key="1" :href="`#tab-1`">
-              Pretensões
+  <v-container
+        fluid
+          >
+          <v-row  align="center"
+          justify="center" style="margin-bottom: -12px; margin-top: 100px">
+        <v-col cols="12"
+            sm="12"
+            md="8" lg="5" >
+            <div class="white text-center"  style="margin-bottom: -12px; border-top-left-radius: 20px; border-top-right-radius: 20px">
+              <br>
+              <h1>Calculadora de Freelas</h1>
+              Saiba o quanto cobrar por um freela.
+              <br>
+              <br>
+            </div>
+        </v-col>
+          </v-row>
+    <v-row  align="center"
+          justify="center" >
+        <v-col cols="12"
+            sm="12"
+            md="8" lg="5">
+          <v-tabs
+            v-model="tab"
+            background-color="indigo accent-4"
+            dark
+            :centered="false"
+            :grow="true"
+            :icons-and-text="false" >
+            <v-tab :key="1" :href="`#tab-1`">
+                Pretensões
+              </v-tab>
+            
+            <v-tab :key="2" :href="`#tab-2`">
+                custos
             </v-tab>
-          
-          <v-tab :key="2" :href="`#tab-2`">
-              custos
-          </v-tab>
 
-          <v-tab :key="3" :href="`#tab-3`">
-              Hora técnica
-          </v-tab>
+            <v-tab :key="3" :href="`#tab-3`">
+                Hora técnica
+            </v-tab>
 
-          <v-tab :key="4" :href="`#tab-4`">
-              Projetos
-          </v-tab>
+            <v-tab :key="4" :href="`#tab-4`" >
+                Projetos
+            </v-tab>
 
-            <v-tab-item
-                    :key="1"
-                    :value="'tab-' + 1"
-                  >
-                  <v-row align="center"
-                    justify="center">
-                    <v-col cols="8"> 
-                      Informe suas pretensões
-                      <br>
-                      <br>
-                      <v-text-field
-                        label="Quanto quer ganhar de salário liquido por mês?"
-                        v-model="salarioLiquido"
-                        @input="calculo"
-                        outlined
-                        dense
-                        prefix="R$"
-                        :min="0"
-                        type="number"
-                      />
-                      <v-text-field
-                        label="Quer trabalhar quantas horas por dia ?"
-                        v-model="horasDia"
-                        @input="calculo"
-                        outlined
-                        dense
-                        type="number"
-                        :min="0"
-                      />
-                      <v-text-field
-                        label="Quer trabalhar quantos dias por semana ?"
-                        v-model="diasSemana"
-                        @input="calculo"
-                        outlined
-                        dense
-                        type="number"
-                        :min="0"
-                      />      
-                      <v-text-field
-                        label="Quantas semanas de férias por ano ?"
-                        v-model="semanaFerias"
-                        @change="verificaFerias"
-                        @input="calculo"
-                        outlined
-                        dense
-                        type="number"
-                        :max="47"
-                        :min="0"
-                      />
-                      
-                    </v-col>
-
-                  </v-row>
-                  <v-row>
-                    <v-col align="right">
-                     <v-btn @click="tab='tab-2'" small color="primary">Proximo</v-btn>
-                     </v-col>
-                  </v-row>
-            </v-tab-item>
-
-            <v-tab-item
-                    :key="2"
-                    :value="'tab-' + 2"
-                  >
-
-                  
-                 <v-row align="center"
-                    justify="center">
-                    <v-col cols="8"> 
-                      <v-form>
-                      <v-text-field
-                          label="nome"
-                          v-model="form.dNome"
-                          outlined
-                          dense
-                        ></v-text-field>
+              <v-tab-item
+                      :key="1"
+                      :value="'tab-' + 1"
+                    >
+                    <v-row align="center"
+                      justify="center" >
+                      <v-col cols="10"> 
+                        Informe suas pretensões
+                        <br>
+                        <br>
                         <v-text-field
-                          label="valor"
-                          v-model="form.dValor"
+                          label="Quanto quer ganhar de salário liquido por mês?"
+                          v-model="salarioLiquido"
+                          @input="calculo"
                           outlined
                           dense
                           prefix="R$"
+                          :min="0"
+                          @change="verifica"
                           type="number"
-                        ></v-text-field>
-                        <v-btn @click="incluir(form)" small color="primary">Salva</v-btn>
-                        </v-form>
-                        <ul>
-                            <li v-for="(despesa, index) in despesas" :key="index">
-                            {{ despesa.nome }}
-                            {{ despesa.valor }}
-                            <v-btn @click="remove(index)" small color="primary">{{despesa.id}}</v-btn></li>
-                        </ul>
+                        />
+                        <v-text-field
+                          label="Quer trabalhar quantas horas por dia ?"
+                          v-model="horasDia"
+                          @input="calculo"
+                          outlined
+                          dense
+                          type="number"
+                          :min="0"
+                          @change="verifica"
+                        />
+                        <v-text-field
+                          label="Quer trabalhar quantos dias por semana ?"
+                          v-model="diasSemana"
+                          @input="calculo"
+                          outlined
+                          dense
+                          type="number"
+                          :min="0"
+                          @change="verifica"
+                        />      
+                        <v-text-field
+                          label="Quantas semanas de férias por ano ?"
+                          v-model="semanaFerias"
+                          @change="verificaFerias"
+                          @input="calculo"
+                          outlined
+                          dense
+                          type="number"
+                          :max="47"
+                          :min="0"
+                        />
+                        
                       </v-col>
+
+                    </v-row>
+                    <v-row>
+                      <v-col align="right">
+                      <v-btn @click="tab='tab-2'" small color="primary">Proximo</v-btn>
+                      </v-col>
+                    </v-row>
+              </v-tab-item>
+
+              <v-tab-item
+                      :key="2"
+                      :value="'tab-' + 2"
+                    >
+
+                    
+                  <v-row align="center"
+                      justify="center">
+                      <v-col cols="10"> 
+                        <v-form>
+                        <v-text-field
+                            label="nome"
+                            v-model="form.dNome"
+                            outlined
+                            dense
+                          ></v-text-field>
+                          <v-text-field
+                            label="valor"
+                            v-model="form.dValor"
+                            outlined
+                            dense
+                            prefix="R$"
+                            type="number"
+                          ></v-text-field>
+                          <v-btn @click="incluir(form)" small color="primary">Salva</v-btn>
+                          </v-form>
+                          <ul>
+                              <li v-for="(despesa, index) in despesas" :key="index">
+                              {{ despesa.nome }}
+                              - R$ {{ despesa.valor }}
+                              <v-btn @click="remove(index)" small color="primary">X</v-btn></li>
+                          </ul>
+                        </v-col>
+                    </v-row>
+                    <v-row>
+                      <v-col align="left">
+                      <v-btn @click="tab='tab-1'" small color="primary">Anterior</v-btn>
+                      </v-col>
+                      <v-col align="right">
+                      <v-btn @click="tab='tab-3'" small color="primary">Proximo</v-btn>
+                      </v-col>
+                    </v-row>
+              </v-tab-item>
+
+              <v-tab-item
+                      :key="3"
+                      :value="'tab-' + 3"
+                    >
+                <v-row align="center"
+                      justify="center">
+                      <v-col cols="10">
+                        <v-text-field
+                          label="sua hora tecnica é:"
+                          v-model="horaTecnica"
+                          outlined
+                          dense              
+                          type="number"
+                          readonly
+                        ></v-text-field>
+                      
+                    </v-col>
                   </v-row>
                   <v-row>
-                     <v-col align="left">
-                     <v-btn @click="tab='tab-1'" small color="primary">Anterior</v-btn>
-                     </v-col>
-                    <v-col align="right">
-                     <v-btn @click="tab='tab-3'" small color="primary">Proximo</v-btn>
-                     </v-col>
+                    <v-col align="left">
+                      <v-btn @click="tab='tab-2'" small color="primary">Anterior</v-btn>
+                      </v-col>
+                      <v-col align="right">
+                      <v-btn @click="tab='tab-4'" small color="primary">Proximo</v-btn>
+                    </v-col>
                   </v-row>
-            </v-tab-item>
+              </v-tab-item>
+              
+              <v-tab-item
+                      :key="4"
+                      :value="'tab-' + 4"
+                    >
+                  jobs
 
-            <v-tab-item
-                    :key="3"
-                    :value="'tab-' + 3"
-                  >
-              <v-row align="center"
-                    justify="center">
-                    <v-col cols="8">
-                      <v-text-field
-                        label="sua hora tecnica é:"
-                        v-model="horaTecnica"
-                        outlined
-                        dense              
-                        type="number"
-                        readonly
-                      ></v-text-field>
-                    
-                  </v-col>
-                </v-row>
-                <v-row>
-                  <v-col align="left">
-                     <v-btn @click="tab='tab-2'" small color="primary">Anterior</v-btn>
-                     </v-col>
-                    <v-col align="right">
-                     <v-btn @click="tab='tab-4'" small color="primary">Proximo</v-btn>
-                   </v-col>
-                </v-row>
-            </v-tab-item>
-            
-            <v-tab-item
-                    :key="4"
-                    :value="'tab-' + 4"
-                  >
-                jobs
-
-            
-            </v-tab-item>
+              
+              </v-tab-item>
 
           </v-tabs>
-      </v-col>
+        </v-col>
+     
     </v-row>
   </v-container>
 </template>
@@ -198,14 +219,11 @@ import { mask } from 'vue-the-mask'
         dNome: '',
         dValor: ''
       },
-      tab: null,
-        text: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.',
-        icons: false,
-        centered: false,
-        grow: true,
-        tabs: 3,
+      tab: null,   
       despesas: [
-        {nome: 'teste', valor: '800'}
+        {nome: 'Aluguel', valor: '800'},
+        {nome: 'Internet', valor: '120'},
+        {nome: 'Luz', valor: '200'},
       ]
     }),
     created () {
@@ -239,9 +257,12 @@ import { mask } from 'vue-the-mask'
           console.log(this.totalDespesas)
         })
       },
-      incluir (desp) {
-        console.log(desp.dNome + ' ' + desp.dValor)
-        this.despesas.push({nome: desp.dNome, valor: desp.dValor})
+      verifica () {
+        console.log('verifica')
+      },
+      incluir (despesa) {
+        console.log(despesa.dNome + ' ' + despesa.dValor)
+        this.despesas.push({nome: despesa.dNome, valor: despesa.dValor})
         this.form.dNome = ''
         this.form.dValor = ''
         this.contador()
@@ -251,9 +272,6 @@ import { mask } from 'vue-the-mask'
         this.despesas.splice(despesa, 1)
         this.contador()
         this.calculo()
-      },
-      proximo () {
-        this.tab = 'tab-2'
       },
       verificaFerias () {
         if(this.semanaFerias > 47){
