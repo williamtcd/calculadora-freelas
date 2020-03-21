@@ -35,15 +35,15 @@
                 Pretensões
               </v-tab>
             
-            <v-tab :key="2" >
+            <v-tab :key="2" :disabled='menublock' @click="verifica()">
                 Despesas
             </v-tab>
 
-            <v-tab :key="3"  :disabled='mHoraTecnica'>
+            <v-tab :key="3"  :disabled='menublock' @click="verifica()">
                 Hora técnica
             </v-tab>
 
-            <v-tab :key="4"  :disabled='mProjeto'>
+            <v-tab :key="4"  :disabled='menublock' @click="verifica()">
                 Projeto
             </v-tab>
 
@@ -57,14 +57,19 @@
                         Informe suas pretensões
                         <br>
                         <br>
+                         <v-form
+                            ref="form"
+                            v-model="valid"
+                            lazy-validation
+                          >
                         <v-text-field
                           label="Quanto quer de salário livre por mês?"
-                          v-model="salarioLiquido"                          
-                          @input="verifica"
+                          v-model="salarioLiquido"
+                          @input="calculo"
                           outlined
+                          :rules='salarioRegras'
                           dense
                           prefix="R$"
-                          @change="calculo"
                           type="number"
                           autocomplete="off"
                           :error-messages="erros.salario"
@@ -72,46 +77,45 @@
                         <v-text-field
                           label="Vai trabalhar quantas horas por dia ?"
                           v-model="horasDia"
-                          @input="verifica"
+                          @input="calculo"
                           outlined
+                          :rules='horasRegras'
                           dense
-                          type="number"
-                          :min="0"
-                          @change="calculo"
+                          v-mask="maskhoras"
                           autocomplete="off"
                           :error-messages="erros.horas"
                         />
                         <v-text-field
                           label="Quer trabalhar quantos dias por semana ?"
                           v-model="diasSemana"
-                          @input="verifica"
+                          @input="calculo"
                           outlined
+                          :rules='diasRegras'
+                          v-mask="maskSemana"
                           dense
-                          type="number"
                           :min="0"
-                          @change="calculo"
                           autocomplete="off"
                           :error-messages="erros.dias"
                         />      
                         <v-text-field
                           label="Quantas semanas de férias por ano ?"
-                          v-model="semanaFerias"
-                          @change="verificaFerias"
+                          v-model="semanaFerias"                          
                           @input="calculo"
+                          :rules='feriasRegras'
+                          v-mask="maskFerias"
                           outlined
                           dense
-                          type="number"
                           :max="47"
                           :min="0"
                           autocomplete="off"
                         />
-                        
+                         </v-form>
                       </v-col>
 
                     </v-row>
                     <v-row>
                       <v-col align="right">
-                      <v-btn @click="controle('+1')" :disabled="mDespesas" small color="light-blue darken-2" style="margin-right: 10px">Proximo</v-btn>
+                      <v-btn @click="controle('+1')"  small color="light-blue darken-2" style="margin-right: 10px">Proximo</v-btn>
                       </v-col>
                     </v-row>
               </v-tab-item>
@@ -129,14 +133,16 @@
                         <br>
                         <v-form>
                         <v-text-field
-                            label="nome"
+                            label="Despesa"
                             v-model="form.dNome"
+                            :error-messages="erros.despesaNome"
                             outlined
                             dense
                           ></v-text-field>
                           <v-text-field
-                            label="valor"
+                            label="Valor"
                             v-model="form.dValor"
+                            :error-messages="erros.despesaValor"
                             outlined
                             dense
                             prefix="R$"
@@ -224,14 +230,36 @@ import { mask } from 'vue-the-mask'
       mask,
     },
     name: 'Calculadora',
-    data: () => ({
-      mDespesas: false,
-      mHoraTecnica: true,
-      mProjeto: true,
+    data: () => ({      
+      valid: true,
+      menublock: true,
       salarioLiquido: '',
+      salarioRegras: [
+        value => !!value || 'Informe o salario',
+        value => (value && value > 0) || '0, sério ? não quer comprar nada depois de pagar as contas ?',
+      ],
+      diasRegras: [
+        value => !!value || 'Não pode deixar em branco',
+        value => (value && value > 0) || 'Precisa ser maior que 0, vamos trabalhar',
+        value => (value && value <= 7) || 'Uma semana só tem 7 dias',
+      ],
+      horasRegras: [
+        value => !!value || 'Não pode deixar em branco',
+        value => (value && value > 0) || 'Precisa ser maior que 0, vamos trabalhar',
+        value => (value && value < 19) || 'Cuide da sua saude, max 18',
+        
+      ],
+      feriasRegras: [
+        value => !!value || 'Você merece folga',
+        value => (value && value > 0) || 'Você merece ao menos 1 semana',
+        value => (value && value < 48) || 'Não vamos exagerar né, 47 é o máximo',
+      ],
       valorrreal: ',##',
       horasDia: '',
       diasSemana: '',
+      maskSemana: '#',
+      maskhoras: '##',
+      maskFerias: '##',
       semanaFerias: '',
       totalDespesas: '',
       horaTecnica: '',
@@ -270,6 +298,9 @@ import { mask } from 'vue-the-mask'
           }          
           let calcula = (this.lucroAno/100*110)/this.horasAno
           this.horaTecnica = calcula.toFixed(2)
+      }, 
+      validate () {
+        this.$refs.form.validate()
       },
       contador () {
         this.totalDespesas = 0
@@ -284,48 +315,38 @@ import { mask } from 'vue-the-mask'
           console.log(this.totalDespesas)
         })
       },
-      verifica () {
-
-        if(this.salarioLiquido){
-          if(this.salarioLiquido < 1 ){
-              this.erros.salario = "valor não pode ser menor que 1"
-              return false
-          } else {
-          delete this.erros.salario
+      async verifica () {   
+        await this.validate()
+        
+          this.menublock = !this.valid
+          if(this.valid === false){
+            this.tab = 0
           }
-        }else{
-          this.erros.salario = "precisa preencher"
-        }
-        if(this.horasDia){
-          if(this.horasDia < 1){
-              this.erros.horas = "valor não pode ser menor que 1"
-              return false
-          } else {
-           delete this.erros.horas
-          }
-        }else{
-          this.erros.horas = "precisa preencher"
-          return
-        }
-        if(this.diasSemana){
-          if(this.diasSemana < 1){
-              this.erros.dias = "valor não pode ser menor que 1"
-              return false
-          } else {
-           delete this.erros.dias
-          }
-        }else{
-          this.erros.dias = "precisa preencher"
-        }
+        return this.valid        
       },
-      controle (valor) {
-        if(this.verifica() == true){
+      async controle (valor) {
+        if( await this.verifica() === true){
           this.tab = parseInt(this.tab)+parseInt(valor)
-          console.log(valor)
-          console.log(this.tab)
         }
       },
       incluir (despesa) {
+        if(!despesa.dNome){
+           this.erros.despesaNome = 'De um nome pra sua despesa'
+           this.form.dNome = onfocus
+          return false
+        }
+        delete this.erros.despesaNome
+        if(!despesa.dValor){
+          this.erros.despesaValor = 'Qual valor da despesa'
+           this.form.dValor = onfocus
+          return false
+        }
+        if(parseFloat(despesa.dValor) <= 0){
+           this.erros.despesaValor = ' sério isso ? temos um brincalhão aqui! '
+           this.form.dValor = onfocus
+          return false
+        }        
+        delete this.erros.despesaValor
         console.log(despesa.dNome + ' ' + despesa.dValor)
         this.despesas.push({nome: despesa.dNome, valor: despesa.dValor})
         this.form.dNome = ''
@@ -336,15 +357,6 @@ import { mask } from 'vue-the-mask'
       remove (despesa) {
         this.despesas.splice(despesa, 1)
         this.contador()
-        this.calculo()
-      },
-      verificaFerias () {
-        if(this.semanaFerias > 47){
-          this.semanaFerias = 47
-        }
-        if(this.semanaFerias < 0 ){
-          this.semanaFerias = 0
-        }
         this.calculo()
       },
       calcjobs: function () {
