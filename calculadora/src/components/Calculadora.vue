@@ -28,28 +28,27 @@
             slider-color="green"
             :centered="false"
             :grow="true"
-            center-active
-            show-arrows="true"
-            :icons-and-text="false" >
-            <v-tab :key="1" :href="`#tab-1`">
+            :icons-and-text="false"
+            mandatory="true"
+            >
+            <v-tab :key="1" >
                 Pretensões
               </v-tab>
             
-            <v-tab :key="2" :href="`#tab-2`">
+            <v-tab :key="2" >
                 Despesas
             </v-tab>
 
-            <v-tab :key="3" :href="`#tab-3`">
+            <v-tab :key="3"  :disabled='mHoraTecnica'>
                 Hora técnica
             </v-tab>
 
-            <v-tab :key="4" :href="`#tab-4`" >
-                Projetos
+            <v-tab :key="4"  :disabled='mProjeto'>
+                Projeto
             </v-tab>
 
               <v-tab-item
                       :key="1"
-                      :value="'tab-' + 1" 
                     >
                     <v-row align="center" 
                       justify="center" >
@@ -60,34 +59,39 @@
                         <br>
                         <v-text-field
                           label="Quanto quer de salário livre por mês?"
-                          v-model="salarioLiquido"
-                          @input="calculo"
+                          v-model="salarioLiquido"                          
+                          @input="verifica"
                           outlined
                           dense
                           prefix="R$"
-                          :min="0"
-                          @change="verifica"
+                          @change="calculo"
                           type="number"
+                          autocomplete="off"
+                          :error-messages="erros.salario"
                         />
                         <v-text-field
                           label="Vai trabalhar quantas horas por dia ?"
                           v-model="horasDia"
-                          @input="calculo"
+                          @input="verifica"
                           outlined
                           dense
                           type="number"
                           :min="0"
-                          @change="verifica"
+                          @change="calculo"
+                          autocomplete="off"
+                          :error-messages="erros.horas"
                         />
                         <v-text-field
                           label="Quer trabalhar quantos dias por semana ?"
                           v-model="diasSemana"
-                          @input="calculo"
+                          @input="verifica"
                           outlined
                           dense
                           type="number"
                           :min="0"
-                          @change="verifica"
+                          @change="calculo"
+                          autocomplete="off"
+                          :error-messages="erros.dias"
                         />      
                         <v-text-field
                           label="Quantas semanas de férias por ano ?"
@@ -99,6 +103,7 @@
                           type="number"
                           :max="47"
                           :min="0"
+                          autocomplete="off"
                         />
                         
                       </v-col>
@@ -106,21 +111,20 @@
                     </v-row>
                     <v-row>
                       <v-col align="right">
-                      <v-btn @click="tab='tab-2'" small color="light-blue darken-2" style="margin-right: 10px">Proximo</v-btn>
+                      <v-btn @click="controle('+1')" :disabled="mDespesas" small color="light-blue darken-2" style="margin-right: 10px">Proximo</v-btn>
                       </v-col>
                     </v-row>
               </v-tab-item>
 
               <v-tab-item
                       :key="2"
-                      :value="'tab-' + 2"
                     >
 
                     
                   <v-row align="center"
                       justify="center">
-                      <v-col cols="10" align="center">
-                        Total das Despesas R$ {{ this.totalDespesas}}
+                      <v-col cols="10" align="right">
+                        Total das Despesas <span style="color: red; font-weight: bold;">R$ {{ this.totalDespesas}}</span>
                         <br>
                         <br>
                         <v-form>
@@ -164,45 +168,40 @@
                     </v-row>
                     <v-row>
                       <v-col align="left">
-                      <v-btn @click="tab='tab-1'" small color="light-blue darken-2" style="margin-left: 10px">Anterior</v-btn>
+                      <v-btn  @click="controle('-1')" small color="light-blue darken-2" style="margin-left: 10px">Anterior</v-btn>
                       </v-col>
                       <v-col align="right">
-                      <v-btn @click="tab='tab-3'" small color="light-blue darken-2" style="margin-right: 10px">Proximo</v-btn>
+                      <v-btn  @click="controle('+1')" small color="light-blue darken-2" style="margin-right: 10px">Proximo</v-btn>
                       </v-col>
                     </v-row>
               </v-tab-item>
 
               <v-tab-item
                       :key="3"
-                      :value="'tab-' + 3"
                     >
                 <v-row align="center"
                       justify="center">
-                      <v-col cols="10">
-                        <v-text-field
-                          label="sua hora tecnica é:"
-                          v-model="horaTecnica"
-                          outlined
-                          dense              
-                          type="number"
-                          readonly
-                        ></v-text-field>
+                      <v-col cols="10" align="center">
+                       <br>
+                       <br>
+                      <h2 style="color: darkgreen">Sua hora técnica é: <span style="font-weight: bold;">R$ {{ this.horaTecnica }}</span>
+                      </h2>
                       
+                      <br><br>
                     </v-col>
                   </v-row>
-                  <v-row>
-                    <v-col align="left">
-                      <v-btn @click="tab='tab-2'" small color="primary">Anterior</v-btn>
+                    <v-row>
+                      <v-col align="left">
+                      <v-btn  @click="controle('-1')" small color="light-blue darken-2" style="margin-left: 10px">Anterior</v-btn>
                       </v-col>
                       <v-col align="right">
-                      <v-btn @click="tab='tab-4'" small color="primary">Proximo</v-btn>
-                    </v-col>
-                  </v-row>
+                      <v-btn  @click="controle('+1')" small color="light-blue darken-2" style="margin-right: 10px">Proximo</v-btn>
+                      </v-col>
+                    </v-row>
               </v-tab-item>
               
               <v-tab-item
                       :key="4"
-                      :value="'tab-' + 4"
                       align="center"
                     >
                   Numa proxima atualização
@@ -226,7 +225,11 @@ import { mask } from 'vue-the-mask'
     },
     name: 'Calculadora',
     data: () => ({
+      mDespesas: false,
+      mHoraTecnica: true,
+      mProjeto: true,
       salarioLiquido: '',
+      valorrreal: ',##',
       horasDia: '',
       diasSemana: '',
       semanaFerias: '',
@@ -242,7 +245,8 @@ import { mask } from 'vue-the-mask'
         dNome: '',
         dValor: ''
       },
-      tab: null,   
+      tab: null,
+      erros: [],
       despesas: [
         {nome: 'Aluguel', valor: '800'},
         {nome: 'Internet', valor: '120'},
@@ -281,7 +285,45 @@ import { mask } from 'vue-the-mask'
         })
       },
       verifica () {
-        console.log('verifica')
+
+        if(this.salarioLiquido){
+          if(this.salarioLiquido < 1 ){
+              this.erros.salario = "valor não pode ser menor que 1"
+              return false
+          } else {
+          delete this.erros.salario
+          }
+        }else{
+          this.erros.salario = "precisa preencher"
+        }
+        if(this.horasDia){
+          if(this.horasDia < 1){
+              this.erros.horas = "valor não pode ser menor que 1"
+              return false
+          } else {
+           delete this.erros.horas
+          }
+        }else{
+          this.erros.horas = "precisa preencher"
+          return
+        }
+        if(this.diasSemana){
+          if(this.diasSemana < 1){
+              this.erros.dias = "valor não pode ser menor que 1"
+              return false
+          } else {
+           delete this.erros.dias
+          }
+        }else{
+          this.erros.dias = "precisa preencher"
+        }
+      },
+      controle (valor) {
+        if(this.verifica() == true){
+          this.tab = parseInt(this.tab)+parseInt(valor)
+          console.log(valor)
+          console.log(this.tab)
+        }
       },
       incluir (despesa) {
         console.log(despesa.dNome + ' ' + despesa.dValor)
