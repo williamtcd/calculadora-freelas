@@ -228,7 +228,7 @@
                           outlined
                           dense
                           v-mask="maskhoras"
-                          autocomplete="off"
+                          :autocomplete="off"
                           :error-messages="erros.horas"
                         />
                         <v-text-field
@@ -239,7 +239,7 @@
                           v-mask="maskjobsDias"
                           outlined
                           dense
-                          autocomplete="off"
+                          :autocomplete="off"
                           :error-messages="erros.horas"
                         />
                     </v-col>
