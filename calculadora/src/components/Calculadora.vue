@@ -1,26 +1,21 @@
 <template>
-  <v-container style="background-color: transparent!important;"
+  <v-container class="fill-height"
         fluid
           >
-          <v-row  align="center"
-          justify="center" style="margin-bottom: -12px; margin-top: 100px">
+        
+    <v-row  align="center"
+          justify="center">
+      
         <v-col cols="12"
             sm="12"
-            md="8" lg="5" >
-            <div class="text-center"  style="margin-bottom: -12px; border-top-left-radius: 20px; border-top-right-radius: 20px; background-color: rgba(255, 255, 255, 0.7)">
+            md="8" lg="5">
+             <div class="text-center"  style="margin-bottom: -12px; border-top-left-radius: 20px; border-top-right-radius: 20px; background-color: rgba(255, 255, 255, 0.7)">
               <br>
               <h1>Calculadora de Freelas</h1>
               Saiba o quanto cobrar por um freela.
               <br>
               <br>
             </div>
-        </v-col>
-          </v-row>
-    <v-row  align="center"
-          justify="center">
-        <v-col cols="12"
-            sm="12"
-            md="8" lg="5">
           <v-tabs
             v-model="tab"
             dark
@@ -43,7 +38,7 @@
                 Hora técnica
             </v-tab>
 
-            <v-tab :key="4"  :disabled='menublock' @click="verifica()">
+            <v-tab :key="4" :disabled='menublock' @click="verifica()">
                 Projeto
             </v-tab>
 
@@ -210,7 +205,53 @@
                       :key="4"
                       align="center"
                     >
-                  Numa proxima atualização
+                 <v-row align="center"
+                      justify="center">
+                                          
+                      <v-col cols="10" align="center">
+                       <br>
+                      <h2 style="color: darkgreen">Valor desse Projeto é 
+                        <span style="font-weight: bold;">R$ {{ jobTotal }}</span></h2>  
+                        <br>
+                        <v-text-field
+                          label="Sua hora técnica calculada é:"
+                          v-model="horaTecnica"
+                          :disabled="true"
+                          outlined
+                          dense
+                        />
+                        <v-text-field
+                          label="Quantas horas por dia no projeto ?"
+                          v-model="jobHoras"
+                          @input="calcjobs()"
+                          :rules='horasRegras'
+                          outlined
+                          dense
+                          v-mask="maskhoras"
+                          autocomplete="off"
+                          :error-messages="erros.horas"
+                        />
+                        <v-text-field
+                          label="Quantos dias o projeto vai durar ?"
+                          v-model="jobDias"
+                          @input="calcjobs()"                          
+                          :rules='diasJobRegras'                          
+                          v-mask="maskjobsDias"
+                          outlined
+                          dense
+                          autocomplete="off"
+                          :error-messages="erros.horas"
+                        />
+                    </v-col>
+                  </v-row>
+                    <v-row>
+                      <v-col align="left">
+                      <v-btn  @click="controle('-1')" small color="light-blue darken-2" style="margin-left: 10px">Anterior</v-btn>
+                      </v-col>
+                      <v-col align="right">
+                      <v-btn  @click="controle('+1')" small color="light-blue darken-2" style="margin-right: 10px">Proximo</v-btn>
+                      </v-col>
+                    </v-row>
 
               
               </v-tab-item>
@@ -254,12 +295,17 @@ import { mask } from 'vue-the-mask'
         value => (value && value > 0) || 'Você merece ao menos 1 semana',
         value => (value && value < 48) || 'Não vamos exagerar né, 47 é o máximo',
       ],
+      diasJobRegras: [
+        value => !!value || 'Não pode deixar em branco',
+        value => (value && value > 0) || 'Precisa ser maior que 0, vamos trabalhar',
+      ],
       valorrreal: ',##',
       horasDia: '',
       diasSemana: '',
       maskSemana: '#',
       maskhoras: '##',
       maskFerias: '##',
+      maskjobsDias: '###',
       semanaFerias: '',
       totalDespesas: '',
       horaTecnica: '',
@@ -347,7 +393,7 @@ import { mask } from 'vue-the-mask'
           return false
         }        
         delete this.erros.despesaValor
-        console.log(despesa.dNome + ' ' + despesa.dValor)
+        
         this.despesas.push({nome: despesa.dNome, valor: despesa.dValor})
         this.form.dNome = ''
         this.form.dValor = ''
@@ -359,14 +405,16 @@ import { mask } from 'vue-the-mask'
         this.contador()
         this.calculo()
       },
-      calcjobs: function () {
+      calcjobs () {
           if(!this.jobHoras){
-              this.jobHoras = 0
+              return false
           }
+          
           if(!this.jobDias){
-              this.jobDias = 0
+             return false
           }
-          this.jobTotal = this.horaTecnica*this.jobHoras*this.jobDias
+          let calcula = this.horaTecnica*this.jobHoras*this.jobDias
+          this.jobTotal = calcula.toFixed(2)
       }       
     }
 }

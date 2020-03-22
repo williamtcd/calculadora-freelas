@@ -1,6 +1,6 @@
 <template>
   <v-app>
-    <div style="background-image: url('fundo8.jpg'); opacity: 0.9; background-size: cover; position: absolute; 
+    <div style="background-image: url('img/background.jpg'); opacity: 0.9; background-size: cover; position: absolute; 
   width: 100%; 
   height: 100%; filter:blur(2px); filter:hue-rotate(222deg);">
     </div>
@@ -16,13 +16,19 @@
       padless
       >
       <v-row
-        justify="center"
+        class="d-flex "
       >
         <v-col
-          class="primary lighten-2 py-4 text-center white--text"
+          class="primary lighten-2 py-4 text-center white--text d-flex justify-space-between" 
           align="center"
         >
-          <v-btn
+         <v-btn
+          href="https://vuetifyjs.com/"
+          target="_blank"
+          text
+        >
+        <img width="32px" src="https://cdn.vuetifyjs.com/images/logos/vuetify-logo-dark.png">
+        </v-btn> <v-btn
           href="https://github.com/willtavarescd/calculadora-freelas"
           target="_blank"
           text
