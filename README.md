@@ -1,5 +1,6 @@
+<p align="center">
 # Calculadora de Freelas
-
+</p>
 ## Demo
 Demo: https://willtavarescd.github.io/calculadora-freelas/
 
