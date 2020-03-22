@@ -1,4 +1,7 @@
-# calculadora
+# Calculadora de Freelas
+
+## Demo
+Demo: https://willtavarescd.github.io/calculadora-freelas/
 
 ## Project setup
 ```
