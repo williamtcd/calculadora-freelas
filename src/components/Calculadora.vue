@@ -248,17 +248,10 @@
                       <v-col align="left">
                       <v-btn  @click="controle('-1')" small color="light-blue darken-2" style="margin-left: 10px">Anterior</v-btn>
                       </v-col>
-                      <v-col align="right">
-                      <v-btn  @click="controle('+1')" small color="light-blue darken-2" style="margin-right: 10px">Proximo</v-btn>
-                      </v-col>
-                    </v-row>
-
-              
+                    </v-row>              
               </v-tab-item>
-
           </v-tabs>
-        </v-col>
-     
+        </v-col>     
     </v-row>
   </v-container>
 </template>

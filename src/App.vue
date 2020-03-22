@@ -29,7 +29,7 @@
         >
         <img width="32px" src="https://cdn.vuetifyjs.com/images/logos/vuetify-logo-dark.png">
         </v-btn> <v-btn
-          href="https://github.com/willtavarescd/calculadora-freelas"
+          href="https://github.com/willtavarescd/calculadora-freelas/tree/develop"
           target="_blank"
           text
         >
