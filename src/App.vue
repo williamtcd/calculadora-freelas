@@ -19,17 +19,10 @@
         class="d-flex "
       >
         <v-col
-          class="primary lighten-2 py-4 text-center white--text d-flex justify-space-between" 
+          class="primary lighten-2 py-4 text-center white--text d-flex justify-end" 
           align="center"
-        >
-         <v-btn
-          href="https://vuetifyjs.com/"
-          target="_blank"
-          text
-        >
-        <img width="32px" src="https://cdn.vuetifyjs.com/images/logos/vuetify-logo-dark.png">
-        </v-btn> <v-btn
-          href="https://github.com/willtavarescd/calculadora-freelas/tree/develop"
+        ><v-btn
+          href="https://github.com/willtavarescd/calculadora-freelas"
           target="_blank"
           text
         >
