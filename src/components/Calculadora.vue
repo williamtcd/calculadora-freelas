@@ -65,8 +65,6 @@
                           :rules='salarioRegras'
                           dense
                           prefix="R$"
-                          type="number"
-                          autocomplete="off"
                           :error-messages="erros.salario"
                         />
                         <v-text-field
@@ -77,7 +75,6 @@
                           :rules='horasRegras'
                           dense
                           v-mask="maskhoras"
-                          autocomplete="off"
                           :error-messages="erros.horas"
                         />
                         <v-text-field
@@ -89,7 +86,6 @@
                           v-mask="maskSemana"
                           dense
                           :min="0"
-                          autocomplete="off"
                           :error-messages="erros.dias"
                         />      
                         <v-text-field
@@ -102,7 +98,6 @@
                           dense
                           :max="47"
                           :min="0"
-                          autocomplete="off"
                         />
                          </v-form>
                       </v-col>
@@ -110,7 +105,7 @@
                     </v-row>
                     <v-row>
                       <v-col align="right">
-                      <v-btn @click="controle('+1')"  small color="light-blue darken-2" style="margin-right: 10px">Proximo</v-btn>
+                      <v-btn @click="controle('+1')"  small color="light-blue darken-2" style="margin-right: 10px; color: white">Proximo</v-btn>
                       </v-col>
                     </v-row>
               </v-tab-item>
@@ -123,7 +118,7 @@
                   <v-row align="center"
                       justify="center">
                       <v-col cols="10" align="right">
-                        Total das Despesas <span style="color: red; font-weight: bold;">R$ {{ this.totalDespesas}}</span>
+                        Total das Despesas <span style="color: red; font-weight: bold;">R$ {{ this.exibetotalDespesas}}</span>
                         <br>
                         <br>
                         <v-form>
@@ -169,10 +164,10 @@
                     </v-row>
                     <v-row>
                       <v-col align="left">
-                      <v-btn  @click="controle('-1')" small color="light-blue darken-2" style="margin-left: 10px">Anterior</v-btn>
+                      <v-btn  @click="controle('-1')" small color="light-blue darken-2" style="margin-left: 10px; color: white">Anterior</v-btn>
                       </v-col>
                       <v-col align="right">
-                      <v-btn  @click="controle('+1')" small color="light-blue darken-2" style="margin-right: 10px">Proximo</v-btn>
+                      <v-btn  @click="controle('+1')" small color="light-blue darken-2" style="margin-right: 10px; color: white">Proximo</v-btn>
                       </v-col>
                     </v-row>
               </v-tab-item>
@@ -185,7 +180,7 @@
                       <v-col cols="10" align="center">
                        <br>
                        <br>
-                      <h2 style="color: darkgreen">Sua hora técnica é: <span style="font-weight: bold;">R$ {{ this.horaTecnica }}</span>
+                      <h2 style="color: darkgreen">Sua hora técnica é: <span style="font-weight: bold;">R$ {{ this.exibehoraTecnica }}</span>
                       </h2>
                       
                       <br><br>
@@ -193,10 +188,10 @@
                   </v-row>
                     <v-row>
                       <v-col align="left">
-                      <v-btn  @click="controle('-1')" small color="light-blue darken-2" style="margin-left: 10px">Anterior</v-btn>
+                      <v-btn  @click="controle('-1')" small color="light-blue darken-2" style="margin-left: 10px; color: white">Anterior</v-btn>
                       </v-col>
                       <v-col align="right">
-                      <v-btn  @click="controle('+1')" small color="light-blue darken-2" style="margin-right: 10px">Proximo</v-btn>
+                      <v-btn  @click="controle('+1')" small color="light-blue darken-2" style="margin-right: 10px; color: white">Proximo</v-btn>
                       </v-col>
                     </v-row>
               </v-tab-item>
@@ -215,7 +210,7 @@
                         <br>
                         <v-text-field
                           label="Sua hora técnica calculada é:"
-                          v-model="horaTecnica"
+                          v-model="exibehoraTecnica"
                           :disabled="true"
                           outlined
                           dense
@@ -228,7 +223,6 @@
                           outlined
                           dense
                           v-mask="maskhoras"
-                          :autocomplete="off"
                           :error-messages="erros.horas"
                         />
                         <v-text-field
@@ -239,14 +233,13 @@
                           v-mask="maskjobsDias"
                           outlined
                           dense
-                          :autocomplete="off"
                           :error-messages="erros.horas"
                         />
                     </v-col>
                   </v-row>
                     <v-row>
                       <v-col align="left">
-                      <v-btn  @click="controle('-1')" small color="light-blue darken-2" style="margin-left: 10px">Anterior</v-btn>
+                      <v-btn  @click="controle('-1')" small color="light-blue darken-2" style="margin-left: 10px; color: white">Anterior</v-btn>
                       </v-col>
                     </v-row>              
               </v-tab-item>
@@ -302,6 +295,7 @@ import { mask } from 'vue-the-mask'
       semanaFerias: '',
       totalDespesas: '',
       horaTecnica: '',
+      exibehoraTecnica: '',
       horasAno: '',
       lucroAno: '',
       jobDias: '',
@@ -315,9 +309,10 @@ import { mask } from 'vue-the-mask'
       tab: null,
       erros: [],
       despesas: [
-        {nome: 'Aluguel', valor: '800'},
-        {nome: 'Internet', valor: '120'},
-        {nome: 'Luz', valor: '200'},
+        {nome: 'Aluguel', valor: '500'},
+        {nome: 'Internet', valor: '119,90'},
+        {nome: 'Luz', valor: '165,50'},
+        {nome: 'Mercado', valor: '650,00'},
       ]
     }),
     created () {
@@ -337,21 +332,33 @@ import { mask } from 'vue-the-mask'
           }          
           let calcula = (this.lucroAno/100*110)/this.horasAno
           this.horaTecnica = calcula.toFixed(2)
+          this.exibehoraTecnica = this.moeda(calcula.toFixed(2))
       }, 
       validate () {
         this.$refs.form.validate()
       },
+      moeda (valor) {
+      let v
+      v = valor
+      v=v.replace(/\D/g,"") // permite digitar apenas numero
+      v=v.replace(/(\d{1})(\d{14})$/,"$1.$2") // coloca ponto antes dos ultimos digitos
+      v=v.replace(/(\d{1})(\d{11})$/,"$1.$2") // coloca ponto antes dos ultimos 11 digitos
+      v=v.replace(/(\d{1})(\d{8})$/,"$1.$2") // coloca ponto antes dos ultimos 8 digitos
+      v=v.replace(/(\d{1})(\d{5})$/,"$1.$2") // coloca ponto antes dos ultimos 5 digitos
+      v=v.replace(/(\d{1})(\d{1,2})$/,"$1,$2") // coloca virgula antes dos ultimos 2 digitos
+      return v
+      },
       contador () {
         this.totalDespesas = 0
         const desp = this.despesas
-        desp.forEach((despesa) => {
-          console.log(despesa.valor)          
+        desp.forEach((despesa) => {       
           if(!this.totalDespesas){
             this.totalDespesas = parseFloat(despesa.valor)
           } else {
-          this.totalDespesas = parseFloat(this.totalDespesas)+parseFloat(despesa.valor)
+          let calcula = parseFloat(this.totalDespesas)+parseFloat(despesa.valor)          
+          this.exibetotalDespesas = this.moeda(calcula.toFixed(2))
+          this.totalDespesas = calcula.toFixed(2)
           }
-          console.log(this.totalDespesas)
         })
       },
       async verifica () {   
@@ -406,8 +413,9 @@ import { mask } from 'vue-the-mask'
           if(!this.jobDias){
              return false
           }
-          let calcula = this.horaTecnica*this.jobHoras*this.jobDias
-          this.jobTotal = calcula.toFixed(2)
+          let calcula = parseFloat(this.horaTecnica)*this.jobHoras*this.jobDias
+          this.jobTotal = this.moeda(calcula.toFixed(2))
+          console.log(this.jobTotal)
       }       
     }
 }
