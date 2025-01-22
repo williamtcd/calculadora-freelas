@@ -3,7 +3,7 @@ Calculadora de Freelas
 </h1>
 
 ## Demo
-Demo: https://williamtavarescd.github.io/calculadora-freelas/
+Demo: https://williamtcd.github.io/calculadora-freelas/
 
 ## Project setup
 ```
